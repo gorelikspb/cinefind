@@ -1,4 +1,4 @@
-# CineFind
+﻿# CineFind
 
 Small capstone project: recommend movies from a few titles you already like (and maybe a mood).
 

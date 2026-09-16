@@ -22,6 +22,9 @@ First scoring will stay simple and explainable. Embeddings can come after that w
 - Direction locked: seed movies + mood, TMDb + MovieLens
 - GitHub Project board for tasks
 - MovieLens `ml-latest-small` downloaded locally
+- TMDb API key works (`test_tmdb_key.py` → OK)
+- Fetch script for TMDb movies (retries; network sometimes drops)
+- Pulled TMDb JSON locally: **47/50** saved (~6 min; a few failed on flaky network, can re-run)
 
 ## Questions
 
@@ -56,3 +59,32 @@ Playaround notebook is in the repo.
 - Open the notebook and poke at the tables (joins to tmdbId, genres, a few titles).
 - Then TMDb: API key, pull movie info locally.
 - After that: cleaned movie table preview + one demo profile → top-10.
+
+## TMDb notes
+
+API key lives in local `.env` (not in git).
+
+Rate limit: roughly ~40 requests/sec soft cap; if you get HTTP 429, wait and retry. We just sleep a bit between calls.
+
+Docs: https://developer.themoviedb.org/docs/rate-limiting
+
+## Next step
+
+- Run `python scripts/test_tmdb_key.py` (should print OK).
+- Then pull movie info: `python scripts/fetch_tmdb_movies.py`  
+  Default is **3** movies (network to TMDb is flaky; script retries). Bump `N` in the script later when it feels stable.
+- Open a few JSON files / poke in a notebook, then cleaned movie table preview.
+
+## Next step
+
+- Finish / check the local TMDb pull (aim ~50 movies).
+- Look at a few JSON fields we need, then build a cleaned movie table preview (join with MovieLens).
+- After that: one demo profile → top-10 with simple scoring.
+
+## Network note (TMDb from home)
+
+Some HTTPS calls to TMDb drop mid-handshake (`connection reset`). Key is fine — looks like the local path (Wi‑Fi / ISP / VPN / antivirus), not the API itself. Script retries and continues.
+
+Impact on the project: low for now. Local samples still work; on a stable network or later in the cloud this should be quieter. Not a reason to redesign the pipeline.
+
+OMDb? Possible backup (IMDb-oriented), but free tier is tighter and metadata is thinner than TMDb. I’d keep TMDb as main source unless coaches push otherwise.
