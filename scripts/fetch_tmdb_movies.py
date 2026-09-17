@@ -16,8 +16,8 @@ LINKS = ROOT / "data" / "raw_private" / "movielens" / "ml-latest-small" / "links
 OUT = ROOT / "data" / "raw_private" / "tmdb" / "movies"
 
 N = 50  # how many movies to fetch
-SLEEP = 1.0  # pause between movies
-RETRIES = 8  # network to TMDb is flaky here
+SLEEP = 1.0
+RETRIES = 8  # flaky HTTPS to TMDb
 
 # load .env into process env
 for line in (ROOT / ".env").read_text(encoding="utf-8").splitlines():
@@ -32,7 +32,7 @@ def get_json(url: str) -> dict:
         headers={
             "Accept": "application/json",
             "User-Agent": "cinefind-local",
-            "Connection": "close",  # avoid broken keep-alive
+            "Connection": "close",
         },
     )
     with urllib.request.urlopen(req, timeout=30) as resp:
@@ -40,6 +40,7 @@ def get_json(url: str) -> dict:
 
 
 def fetch_movie(tmdb_id: int, key: str) -> dict:
+    """One movie (+ keywords); retry on connection drops."""
     q = urllib.parse.urlencode({"api_key": key, "append_to_response": "keywords"})
     url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?{q}"
     last: Exception | None = None
@@ -48,7 +49,7 @@ def fetch_movie(tmdb_id: int, key: str) -> dict:
             return get_json(url)
         except urllib.error.URLError as e:
             last = e
-            wait = attempt  # 1s, 2s, 3s...
+            wait = attempt
             print(f"  retry {attempt}/{RETRIES} after error, wait {wait}s")
             time.sleep(wait)
     raise last  # type: ignore[misc]

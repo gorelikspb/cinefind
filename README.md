@@ -10,4 +10,4 @@ TMDb, MovieLens, then later S3 / Glue / Athena, Airflow, and something to show r
 
 ## Where things stand
 
-See `docs/progress.md`.
+See `docs/progress.md`. Draft sketch: `architecture.md`.

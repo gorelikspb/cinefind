@@ -25,6 +25,9 @@ First scoring will stay simple and explainable. Embeddings can come after that w
 - TMDb API key works (`test_tmdb_key.py` → OK)
 - Fetch script for TMDb movies (retries; network sometimes drops)
 - Pulled TMDb JSON locally: **47/50** saved (~6 min; a few failed on flaky network, can re-run)
+- Local cleaned movie table preview (`movies_clean` CSV + Parquet): TMDb fields + MovieLens id join; 47/47 matched
+- Demo profile → rules-based top-10 with reasons (`demo_top10.csv`)
+- First DQ script on `movies_clean` / raw presence (`check_movies_dq.py`)
 
 ## Questions
 
@@ -88,3 +91,28 @@ Some HTTPS calls to TMDb drop mid-handshake (`connection reset`). Key is fine �
 Impact on the project: low for now. Local samples still work; on a stable network or later in the cloud this should be quieter. Not a reason to redesign the pipeline.
 
 OMDb? Possible backup (IMDb-oriented), but free tier is tighter and metadata is thinner than TMDb. I’d keep TMDb as main source unless coaches push otherwise.
+
+## Next step
+
+- Keep local field pick → cleaned movie table → demo top-10.
+- Draft docs (sketches): `architecture.md` (pipeline) + `runbook.md` (run/fail). Include raw checks, DQ in the pipeline, silver as Parquet, small debug volumes vs later scale.
+- Cloud later, same layers: **S3+Glue+Athena+Airflow**, or **ADLS+Databricks/PySpark/Delta**.
+
+## Next step
+
+- Move GitHub Project cards to match (clean table / demo score / DQ).
+- Push scripts + architecture/progress when ready (no private notes, no raw data).
+- Later: collaborative ratings idea; cloud small-batch proof.
+- runbook.md later when ops steps are stable.
+
+## Scoring notes (now vs later)
+
+**Now (rough engine):** content rules on `movies_clean` — shared genres/keywords, optional mood word, TMDb `vote_average` as a light quality nudge. Enough to show the pipeline end-to-end.
+
+**Later (use MovieLens ratings we already have, but do not wire in yet):**
+- Do not rely only on a global average score.
+- Idea: find people who rated the seed movies similarly (close taste), then recommend titles **those** people liked and the user has not seeded.
+- That needs enough overlapping ratings (MovieLens `ratings` is built for this: many users × many movies). Our `ml-latest-small` is already a starting point; bigger dumps (20M/32M) give denser neighborhoods.
+- Still keep a content/fallback path when overlap is thin.
+
+Until then: keep the crude scorer; ratings stay unused bronze/silver candidates.
