@@ -1,0 +1,50 @@
+:root { --bg: #f4f1ec; --card: #fff; --ink: #1c1917; --muted: #78716c; --line: #e7e5e4; }
+* { box-sizing: border-box; }
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  margin: 0; color: var(--ink); background: var(--bg);
+}
+main { max-width: 72rem; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+a { color: #1d4ed8; text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1 { margin: 0.4rem 0 0.35rem; font-size: 1.75rem; }
+.muted { color: var(--muted); }
+.seed-row, .grid {
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  margin: 1rem 0 1.5rem;
+}
+.grid { grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
+.card, .seed, .profile-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.profile-card { padding: 1rem 1.1rem 1.15rem; gap: 0.35rem; }
+.profile-card h2 { margin: 0; font-size: 1.15rem; }
+.poster {
+  aspect-ratio: 2 / 3; width: 100%; object-fit: cover; background: #d6d3d1;
+  display: block;
+}
+.poster-fallback {
+  aspect-ratio: 2 / 3; display: grid; place-items: center;
+  background: #d6d3d1; color: var(--muted); font-size: 0.85rem; padding: 0.75rem; text-align: center;
+}
+.meta { padding: 0.75rem 0.85rem 1rem; display: flex; flex-direction: column; gap: 0.25rem; flex: 1; }
+.rank {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--muted);
+}
+.title { font-weight: 650; line-height: 1.25; }
+.genres { font-size: 0.8rem; color: var(--muted); }
+.score { font-variant-numeric: tabular-nums; font-weight: 650; margin-top: 0.35rem; }
+.reason { font-size: 0.78rem; color: #57534e; line-height: 1.35; margin-top: 0.35rem; }
+.tmdb { font-size: 0.78rem; margin-top: 0.45rem; }
+.home-grid {
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  margin: 1.25rem 0;
+}
+.seed-list { margin: 0.35rem 0 0.6rem; padding-left: 1.1rem; color: var(--ink); }
+.seed-list li { margin: 0.2rem 0; }
+.card a.poster-link, .seed a.poster-link { color: inherit; text-decoration: none; }

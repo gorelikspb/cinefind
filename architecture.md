@@ -52,6 +52,7 @@ Compute: **Glue, Spark / Databricks, local Python**. Serving reads gold.
 ### Serve
 
 - **Metabase, Athena / Spark SQL, FastAPI** — enough to show top-10.
+  Local demo: `serve/app.py` exposes three fixed profiles as JSON (`/v1/recommendations/{profile_id}`).
 
 ## Data quality (in the pipeline)
 

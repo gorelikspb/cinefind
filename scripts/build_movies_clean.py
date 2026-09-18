@@ -46,6 +46,7 @@ def row_from_tmdb(data: dict) -> dict:
         "popularity": data.get("popularity"),
         "vote_average": data.get("vote_average"),
         "vote_count": data.get("vote_count"),
+        "poster_path": data.get("poster_path") or "",
     }
 
 

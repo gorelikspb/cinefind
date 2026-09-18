@@ -22,12 +22,18 @@ First scoring will stay simple and explainable. Embeddings can come after that w
 - Direction locked: seed movies + mood, TMDb + MovieLens
 - GitHub Project board for tasks
 - MovieLens `ml-latest-small` downloaded locally
-- TMDb API key works (`test_tmdb_key.py` → OK)
+- TMDb API key works (local `.env`)
 - Fetch script for TMDb movies (retries; network sometimes drops)
 - Pulled TMDb JSON locally: **47/50** saved (~6 min; a few failed on flaky network, can re-run)
 - Local cleaned movie table preview (`movies_clean` CSV + Parquet): TMDb fields + MovieLens id join; 47/47 matched
 - Demo profile → rules-based top-10 with reasons (`demo_top10.csv`)
 - First DQ script on `movies_clean` / raw presence (`check_movies_dq.py`)
+- Architecture sketch + pipeline diagram in the repo
+- FastAPI serve demo (`serve/app.py`): HTML cards + JSON; scorer runs per request on `movies_clean`
+- Three demo profiles (`demo_family`, `demo_crime`, `demo_romance`) in `scoring_lib`
+- `movies_clean` keeps TMDb `poster_path`; UI shows posters + TMDb links
+- Local catalog is still small (~50 movies), so demo recommendations are limited
+- Dropped obsolete `test_tmdb_key.py`
 
 ## Questions
 
@@ -73,8 +79,7 @@ Docs: https://developer.themoviedb.org/docs/rate-limiting
 
 ## Next step
 
-- Run `python scripts/test_tmdb_key.py` (should print OK).
-- Then pull movie info: `python scripts/fetch_tmdb_movies.py`  
+- Confirm TMDb key in local `.env`, then pull movie info: `python scripts/fetch_tmdb_movies.py`  
   Default is **3** movies (network to TMDb is flaky; script retries). Bump `N` in the script later when it feels stable.
 - Open a few JSON files / poke in a notebook, then cleaned movie table preview.
 
@@ -100,10 +105,8 @@ OMDb? Possible backup (IMDb-oriented), but free tier is tighter and metadata is 
 
 ## Next step
 
-- Move GitHub Project cards to match (clean table / demo score / DQ).
-- Push scripts + architecture/progress when ready (no private notes, no raw data).
-- Later: collaborative ratings idea; cloud small-batch proof.
-- runbook.md later when ops steps are stable.
+- Orchestrate the existing scripts (Airflow / Jobs) in layer order.
+- Later: widen the movie sample so recommendations have more room; collaborative ratings; cloud small-batch; `runbook.md` when ops steps are stable.
 
 ## Scoring notes (now vs later)
 
