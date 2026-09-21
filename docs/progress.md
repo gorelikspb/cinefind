@@ -36,6 +36,9 @@ First scoring will stay simple and explainable. Embeddings can come after that w
 - Dropped obsolete `test_tmdb_key.py`
 - Local Airflow (Docker Compose under `airflow/`): DAG `cinefind_local` = build → DQ → score; one manual run succeeded (~20s). UI localhost:8080 (airflow/airflow). Fetch still CLI.
 - Local `runbook.md`: fetch / Airflow / serve commands
+- Widened TMDb pull: target 250, **232/250** saved (~235 JSON on disk); network still drops some ids
+- Rebuilt `movies_clean` (235 rows, join 100%) + DQ pass + demo top-10 after widen
+- Airflow re-run on widened catalog: DAG `cinefind_local` **success** (build → DQ → score); verified via `dags list-runs` / `tasks states-for-dag-run` + parquet 235 rows + top10 CSV mtimes
 
 ## Questions
 
@@ -131,7 +134,13 @@ Local Airflow (Docker Compose under `airflow/`):
 
 Until then: keep the crude scorer; ratings stay unused bronze/silver candidates.
 
+## Scale note (keep simple)
+
+- **Ratings** can grow from MovieLens **files** (100k → 20M/32M). No API.
+- **Movie info** via TMDb API is fine for a **small/local** catalog. Huge pulls hit rate limits / ToS risk — not the path for “all movies”.
+- For a bigger story later: ratings = bulk dump; movie metadata = dump or a one-time snapshot in storage, API only for small updates.
+- Capstone stays simple: current local sample + pipeline is enough; do not chase 1B via TMDb.
+
 ## Next step
 
-- Optional: add fetch as a DAG task (needs API key in the container).
-- Later: widen sample; collaborative ratings; same task order on cloud Airflow (S3+Glue) or Databricks Jobs.
+Thin collaborative layer on MovieLens ratings (content rules stay as fallback). One path only — cloud small-batch after that works.

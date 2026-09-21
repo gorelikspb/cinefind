@@ -1,4 +1,4 @@
-"""Pull a few TMDb movies and save JSON. Default: 3 requests (local test)."""
+"""Pull TMDb movies and save JSON. Skips files that already exist."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LINKS = ROOT / "data" / "raw_private" / "movielens" / "ml-latest-small" / "links.csv"
 OUT = ROOT / "data" / "raw_private" / "tmdb" / "movies"
 
-N = 50  # how many movies to fetch
+N = 250  # how many movies to fetch (widen local catalog)
 SLEEP = 1.0
 RETRIES = 8  # flaky HTTPS to TMDb
 
