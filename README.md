@@ -1,24 +1,23 @@
 ﻿# CineFind
 
-Small capstone project: recommend movies from a few titles you already like (and maybe a mood).
+Capstone: movie picks from seed titles (+ mood). **Main story = data pipeline** (bronze → silver → gold → serve). Scoring is a thin demo layer with swappable channels — not a polished recommender.
 
-For now the point is the data pipeline and a simple demo, not a polished consumer app.
+## Docs
 
-## Stack I’m aiming at
+- `docs/progress.md` — status
+- `architecture.md` — layers
+- `docs/scoring.md` — score channels (content / collab / sklearn SVD / HF stub)
+- `runbook.md` — local commands
+- `notebooks/01_movielens_playground.ipynb` — quick look at MovieLens tables we use
 
-TMDb, MovieLens, then later S3 / Glue / Athena, Airflow, and something to show results (Metabase or a small FastAPI).
-
-## Where things stand
-
-See `docs/progress.md`. Draft sketch: `architecture.md`.
-
-## Local demo API (optional)
-
-Needs `movies_clean.parquet` from `scripts/build_movies_clean.py`.
+## Local
 
 ```text
 pip install -r requirements.txt
+python scripts/build_movies_clean.py
+python scripts/check_movies_dq.py
+python scripts/score_demo_profile.py
 python -m uvicorn serve.app:app --reload --port 8001
 ```
 
-Then open http://127.0.0.1:8001/ — profiles: `demo_family`, `demo_crime`, `demo_romance`.
+http://127.0.0.1:8001/

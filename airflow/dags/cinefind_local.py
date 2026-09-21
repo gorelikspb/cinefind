@@ -19,7 +19,7 @@ SCRIPTS = "/opt/cinefind/scripts"
 
 with DAG(
     dag_id="cinefind_local",
-    description="build_movies_clean → check_movies_dq → score_demo_profile",
+    description="build_movies_clean → check_movies_dq → score_demo_profile (gold + top10)",
     start_date=datetime(2026, 1, 1),
     schedule=None,
     catchup=False,
@@ -35,6 +35,7 @@ with DAG(
         bash_command=f"cd {SCRIPTS} && python check_movies_dq.py",
     )
 
+    # Builds profile_scores.parquet (content + collab channels) and demo top10 CSVs.
     score_demo_profiles = BashOperator(
         task_id="score_demo_profiles",
         bash_command=f"cd {SCRIPTS} && python score_demo_profile.py",

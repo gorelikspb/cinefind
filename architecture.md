@@ -36,23 +36,16 @@ Sources (TMDb API, MovieLens files)
 - Example tables: `movies_clean`, maybe `ratings_clean`, `links`.
 - Transform engine when we leave pure local: **Glue, Databricks / PySpark, Pandas / Polars**.
 
-### Gold (calculated / trained / ready to serve)
+### Gold (calculated / ready to serve)
 
-Silver holds cleaned facts. Gold holds **derived** tables built from silver:
-
-- **Feature tables** — calculated columns per movie (or profile): genre flags, keyword bags, popularity bins; embeddings later if we train them
-- **Feature store** — reusable, versioned feature tables (e.g. `movie_features` in **Parquet, Delta**) that scoring and future models read
-- **Scored / trained outputs** — rules or model results, e.g. `rec_movies_scored` (profile, movie, score, reason) plus an optional model version
-
-MVP path: build features → rules-based score → top-N (explainable).  
-Optional later: train embeddings or a small model and write predictions into the same gold layer.
-
-Compute: **Glue, Spark / Databricks, local Python**. Serving reads gold.
+Derived tables from silver. Demo gold: `profile_scores` with **plug-in columns**
+(`content_score`, `collab_*`, `ml_score`, `hf_score`) — see `docs/scoring.md`.
+Serve mixes weights; pipeline focus stays ingest → clean → DQ → gold.
 
 ### Serve
 
 - **Metabase, Athena / Spark SQL, FastAPI** — enough to show top-10.
-  Local demo: `serve/app.py` exposes three fixed profiles as JSON (`/v1/recommendations/{profile_id}`).
+  Local: `serve/app.py` reads gold, mixes channel weights (sliders + `/v1/recommendations/{profile_id}`).
 
 ## Data quality (in the pipeline)
 

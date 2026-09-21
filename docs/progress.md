@@ -39,6 +39,7 @@ First scoring will stay simple and explainable. Embeddings can come after that w
 - Widened TMDb pull: target 250, **232/250** saved (~235 JSON on disk); network still drops some ids
 - Rebuilt `movies_clean` (235 rows, join 100%) + DQ pass + demo top-10 after widen
 - Airflow re-run on widened catalog: DAG `cinefind_local` **success** (build → DQ → score); verified via `dags list-runs` / `tasks states-for-dag-run` + parquet 235 rows + top10 CSV mtimes
+- Gold `profile_scores` + serve sliders; channels: content, collab (pandas), ml (sklearn SVD + MLflow), hf (stub plug-in). Details: `docs/scoring.md`.
 
 ## Questions
 
@@ -138,9 +139,8 @@ Until then: keep the crude scorer; ratings stay unused bronze/silver candidates.
 
 - **Ratings** can grow from MovieLens **files** (100k → 20M/32M). No API.
 - **Movie info** via TMDb API is fine for a **small/local** catalog. Huge pulls hit rate limits / ToS risk — not the path for “all movies”.
-- For a bigger story later: ratings = bulk dump; movie metadata = dump or a one-time snapshot in storage, API only for small updates.
-- Capstone stays simple: current local sample + pipeline is enough; do not chase 1B via TMDb.
+- Capstone stays simple: local sample + pipeline; scoring channels are demos you can swap.
 
 ## Next step
 
-Thin collaborative layer on MovieLens ratings (content rules stay as fallback). One path only — cloud small-batch after that works.
+Pipeline first (widen catalog / later cloud small-batch). Scoring stays plug-in channels — pick one story for the demo, leave the others as “I can wire this”. Optional: real HF into `hf_score` stub.

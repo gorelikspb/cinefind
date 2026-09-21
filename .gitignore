@@ -7,6 +7,12 @@ __pycache__/
 .ipynb_checkpoints/
 data/raw_private/
 *PRIVATE*
+mlruns/
+mlflow.db
+mlartifacts/
+
+# local-only explainers (not for GitHub)
+docs/notes/
 
 # local Airflow runtime
 airflow/logs/*
