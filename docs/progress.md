@@ -42,6 +42,7 @@ First scoring will stay simple and explainable. Embeddings can come after that w
 - Gold `profile_scores` + serve sliders; channels: content, collab (pandas), ml (sklearn SVD + MLflow), hf (stub plug-in). Details: `docs/scoring.md`.
 - Widen TMDb fetch target **500** (first N `tmdbId` from MovieLens `links.csv`); **485** JSON on disk → `movies_clean` 485 + DQ pass + gold rebuild.
 - S3 sample land: bucket `cinefind-gorelik-us-east-1`, script `upload_s3_sample.py` (bronze JSON + silver parquet under `cinefind/`).
+- Shared silver transform + three runners: local disk, laptop↔S3 (`build_movies_clean_s3.py`), Glue Python Shell (`glue/build_movies_clean.py`). Airflow: one DAG with `silver=local|glue` branch.
 
 ## Questions
 
@@ -145,4 +146,4 @@ Until then: keep the crude scorer; ratings stay unused bronze/silver candidates.
 
 ## Next step
 
-Cloud: rebuild silver **from bronze on S3** (Glue / Databricks / same Python on EMR), then DQ + gold paths. Local widen/re-fetch gaps ok as needed. Scoring stays plug-in for subjective demos.
+Try Glue a couple of times (`deploy` / `run_glue_…`); daily tests stay `build_movies_clean.py` + Airflow `silver=local`. Optional: Athena on silver, or DQ that reads S3 directly.

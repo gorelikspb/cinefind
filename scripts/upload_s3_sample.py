@@ -1,12 +1,4 @@
-"""Upload local bronze/silver preview to S3 (small-batch cloud land).
-
-Env (optional):
-  CINEFIND_S3_BUCKET  default cinefind-gorelik-us-east-1
-  CINEFIND_S3_PREFIX  default cinefind
-
-Layout:
-  s3://{bucket}/{prefix}/bronze/tmdb/movies/*.json
-  s3://{bucket}/{prefix}/silver/movies_clean.parquet
+"""Upload local bronze (+ MovieLens CSVs) to S3. Optional: also copy local silver.
 
   python scripts/upload_s3_sample.py
 """
@@ -23,6 +15,8 @@ BUCKET = os.environ.get("CINEFIND_S3_BUCKET", "cinefind-gorelik-us-east-1")
 PREFIX = os.environ.get("CINEFIND_S3_PREFIX", "cinefind").strip("/")
 
 LOCAL_TMDB = ROOT / "data" / "raw_private" / "tmdb" / "movies"
+LOCAL_LINKS = ROOT / "data" / "raw_private" / "movielens" / "ml-latest-small" / "links.csv"
+LOCAL_MOVIES = ROOT / "data" / "raw_private" / "movielens" / "ml-latest-small" / "movies.csv"
 LOCAL_CLEAN = ROOT / "data" / "raw_private" / "preview" / "movies_clean.parquet"
 
 
@@ -35,11 +29,16 @@ def main() -> None:
         n_json += 1
     print(f"uploaded {n_json} json -> s3://{BUCKET}/{PREFIX}/bronze/tmdb/movies/")
 
-    if not LOCAL_CLEAN.exists():
-        raise SystemExit(f"missing {LOCAL_CLEAN} — run build_movies_clean.py first")
-    clean_key = f"{PREFIX}/silver/movies_clean.parquet"
-    s3.upload_file(str(LOCAL_CLEAN), BUCKET, clean_key)
-    print(f"uploaded silver -> s3://{BUCKET}/{clean_key}")
+    for local, name in ((LOCAL_LINKS, "links.csv"), (LOCAL_MOVIES, "movies.csv")):
+        key = f"{PREFIX}/bronze/movielens/{name}"
+        s3.upload_file(str(local), BUCKET, key)
+        print(f"uploaded {name} -> s3://{BUCKET}/{key}")
+
+    # Optional snapshot of local silver (cloud rebuild should overwrite this).
+    if LOCAL_CLEAN.exists():
+        clean_key = f"{PREFIX}/silver/movies_clean.parquet"
+        s3.upload_file(str(LOCAL_CLEAN), BUCKET, clean_key)
+        print(f"uploaded local silver snapshot -> s3://{BUCKET}/{clean_key}")
 
 
 if __name__ == "__main__":
