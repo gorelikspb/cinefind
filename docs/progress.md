@@ -43,6 +43,7 @@ First scoring will stay simple and explainable. Embeddings can come after that w
 - Widen TMDb fetch target **500** (first N `tmdbId` from MovieLens `links.csv`); **485** JSON on disk → `movies_clean` 485 + DQ pass + gold rebuild.
 - S3 sample land: bucket `cinefind-gorelik-us-east-1`, script `upload_s3_sample.py` (bronze JSON + silver parquet under `cinefind/`).
 - Shared silver transform + three runners: local disk, laptop↔S3 (`build_movies_clean_s3.py`), Glue Python Shell (`glue/build_movies_clean.py`). Airflow: one DAG with `silver=local|glue` branch.
+- Cloud DQ on S3 silver: `check_movies_dq_s3.py` + Glue job `cinefind_check_movies_dq` (same rules as local DQ).
 
 ## Questions
 
@@ -146,4 +147,4 @@ Until then: keep the crude scorer; ratings stay unused bronze/silver candidates.
 
 ## Next step
 
-Try Glue a couple of times (`deploy` / `run_glue_…`); daily tests stay `build_movies_clean.py` + Airflow `silver=local`. Optional: Athena on silver, or DQ that reads S3 directly.
+Optional: Athena on silver, or wire Glue DQ after silver in a small Step Functions / console habit. Daily tests stay local Airflow. Scoring unchanged.

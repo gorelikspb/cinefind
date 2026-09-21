@@ -60,9 +60,14 @@ Same transform (`movies_clean_lib` / Glue script). Three ways to run silver:
 ```powershell
 python scripts/upload_s3_sample.py          # bronze JSON + MovieLens CSVs (+ optional local silver snapshot)
 python scripts/build_movies_clean_s3.py     # rebuild silver on S3, compute=local
-python scripts/deploy_glue_movies_clean.py  # upload script, create/update Glue job
-python scripts/run_glue_movies_clean.py     # start job, wait, sync parquet to local preview
+python scripts/check_movies_dq_s3.py        # DQ on S3 silver (laptop)
+python scripts/deploy_glue_movies_clean.py  # upload script, create/update Glue silver job
+python scripts/run_glue_movies_clean.py     # start silver job, wait, sync parquet to local preview
+python scripts/deploy_glue_check_movies_dq.py
+python scripts/run_glue_check_movies_dq.py  # Glue DQ job (fails run if checks fail)
 ```
+
+Or in AWS Console: Run `cinefind_build_movies_clean`, then Run `cinefind_check_movies_dq`.
 
 Default bucket: `s3://cinefind-gorelik-us-east-1/cinefind/…`  
 Env: `CINEFIND_S3_BUCKET`, `CINEFIND_S3_PREFIX`, `CINEFIND_GLUE_ROLE` (default `AWSGlueServiceRole-retail`).
