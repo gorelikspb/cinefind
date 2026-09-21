@@ -34,6 +34,8 @@ First scoring will stay simple and explainable. Embeddings can come after that w
 - `movies_clean` keeps TMDb `poster_path`; UI shows posters + TMDb links
 - Local catalog is still small (~50 movies), so demo recommendations are limited
 - Dropped obsolete `test_tmdb_key.py`
+- Local Airflow (Docker Compose under `airflow/`): DAG `cinefind_local` = build → DQ → score; one manual run succeeded (~20s). UI localhost:8080 (airflow/airflow). Fetch still CLI.
+- Local `runbook.md`: fetch / Airflow / serve commands
 
 ## Questions
 
@@ -108,6 +110,15 @@ OMDb? Possible backup (IMDb-oriented), but free tier is tighter and metadata is 
 - Orchestrate the existing scripts (Airflow / Jobs) in layer order.
 - Later: widen the movie sample so recommendations have more room; collaborative ratings; cloud small-batch; `runbook.md` when ops steps are stable.
 
+## Next step
+
+Local Airflow (Docker Compose under `airflow/`):
+
+- `docker compose up -d` from `airflow/`
+- UI `http://localhost:8080` — login `airflow` / `airflow`
+- Unpause DAG `cinefind_local`, Trigger → build → DQ → score
+- Fetch TMDb stays CLI for now (API key + flaky network)
+
 ## Scoring notes (now vs later)
 
 **Now (rough engine):** content rules on `movies_clean` — shared genres/keywords, optional mood word, TMDb `vote_average` as a light quality nudge. Enough to show the pipeline end-to-end.
@@ -119,3 +130,8 @@ OMDb? Possible backup (IMDb-oriented), but free tier is tighter and metadata is 
 - Still keep a content/fallback path when overlap is thin.
 
 Until then: keep the crude scorer; ratings stay unused bronze/silver candidates.
+
+## Next step
+
+- Optional: add fetch as a DAG task (needs API key in the container).
+- Later: widen sample; collaborative ratings; same task order on cloud Airflow (S3+Glue) or Databricks Jobs.

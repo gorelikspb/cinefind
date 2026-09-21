@@ -6,3 +6,10 @@
 __pycache__/
 .ipynb_checkpoints/
 data/raw_private/
+*PRIVATE*
+
+# local Airflow runtime
+airflow/logs/*
+!airflow/logs/.gitkeep
+airflow/plugins/*
+!airflow/plugins/.gitkeep

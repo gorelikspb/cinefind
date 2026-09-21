@@ -84,9 +84,10 @@ Official [MovieLens](https://grouplens.org/datasets/movielens/) sizes (ratings, 
 
 We debug on **`ml-latest-small`**. The pipeline should still make sense if we later load **25M / 32M** (or the 1B synthetic set) with the same layers and more Spark workers.
 
-## Orchestration & ops (later)
+## Orchestration & ops
 
-- Schedule / retry / backfill: **Airflow, Databricks Jobs**
+- Local proof: **Airflow** under `airflow/` (Docker Compose, LocalExecutor). DAG `cinefind_local`: `build_movies_clean` → `check_movies_dq` → `score_demo_profile`. UI `http://localhost:8080` (user/pass `airflow` / `airflow`).
+- Cloud later: same task order on **Airflow** (AWS path) or **Databricks Jobs** (Azure path).
 - Secrets: env / secret store (never in git)
 - Metrics / alerts later: job duration, rows in/out, fail rate (**CloudWatch, Databricks metrics**)
 
