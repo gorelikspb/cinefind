@@ -27,7 +27,8 @@ Sources (TMDb API, MovieLens files)
 
 - Land data as ingested: TMDb JSON, MovieLens CSVs.
 - **Check raw data** before promoting: files exist, readable, expected columns/ids, row counts sensible, basic null spikes.
-- Storage later: **S3, ADLS Gen2**. Local folder works for debug.
+- Storage later: **S3, ADLS Gen2**. Local folder works for debug.  
+First cloud land (sample): `scripts/upload_s3_sample.py` → `s3://cinefind-gorelik-us-east-1/cinefind/` (bronze JSON + silver parquet copy).
 
 ### Silver (processed)
 

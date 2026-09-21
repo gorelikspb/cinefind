@@ -40,6 +40,8 @@ First scoring will stay simple and explainable. Embeddings can come after that w
 - Rebuilt `movies_clean` (235 rows, join 100%) + DQ pass + demo top-10 after widen
 - Airflow re-run on widened catalog: DAG `cinefind_local` **success** (build → DQ → score); verified via `dags list-runs` / `tasks states-for-dag-run` + parquet 235 rows + top10 CSV mtimes
 - Gold `profile_scores` + serve sliders; channels: content, collab (pandas), ml (sklearn SVD + MLflow), hf (stub plug-in). Details: `docs/scoring.md`.
+- Widen TMDb fetch target **500** (first N `tmdbId` from MovieLens `links.csv`); **485** JSON on disk → `movies_clean` 485 + DQ pass + gold rebuild.
+- S3 sample land: bucket `cinefind-gorelik-us-east-1`, script `upload_s3_sample.py` (bronze JSON + silver parquet under `cinefind/`).
 
 ## Questions
 
@@ -143,4 +145,4 @@ Until then: keep the crude scorer; ratings stay unused bronze/silver candidates.
 
 ## Next step
 
-Pipeline first (widen catalog / later cloud small-batch). Scoring stays plug-in channels — pick one story for the demo, leave the others as “I can wire this”. Optional: real HF into `hf_score` stub.
+Cloud: rebuild silver **from bronze on S3** (Glue / Databricks / same Python on EMR), then DQ + gold paths. Local widen/re-fetch gaps ok as needed. Scoring stays plug-in for subjective demos.

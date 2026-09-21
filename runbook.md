@@ -46,3 +46,15 @@ With `--reload`, code edits are picked up automatically. After rebuilding gold: 
 python scripts/train_cf_svd.py --n-components 16
 mlflow ui --backend-store-uri "sqlite:///mlflow.db" --host 127.0.0.1 --port 5000
 ```
+
+## Cloud sample (S3 land)
+
+Needs AWS credentials (`aws sts get-caller-identity` works). Uploads local bronze JSON + silver parquet:
+
+```powershell
+python scripts/upload_s3_sample.py
+```
+
+Default: `s3://cinefind-gorelik-us-east-1/cinefind/bronze|silver/…`  
+Override: `CINEFIND_S3_BUCKET`, `CINEFIND_S3_PREFIX`.  
+Silver on S3 is a **copy** of the local preview for now; later a cloud job should rebuild silver from bronze on S3.
