@@ -15,6 +15,18 @@ python scripts/score_demo_profile.py    # gold + top10 csv
 Airflow (`airflow/`): `build_movies_clean` → `check_movies_dq` → `score_demo_profile`.  
 Fetch and train are optional / separate.
 
+```powershell
+cd airflow
+docker compose up -d --pull never
+```
+
+UI: http://localhost:8080 — `airflow` / `airflow`  
+DAG `cinefind_local`: unpause → Trigger.
+
+```powershell
+docker compose down
+```
+
 ## Serve
 
 From repo root `cinefind/`:
